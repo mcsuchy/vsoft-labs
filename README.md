@@ -21,3 +21,20 @@ docker push tododockerregistry.azurecr.io/todo-image:v1
 
 #Uruchomienie lokalne z bazą AAD Default
 dotnet run --environment Development --ConnectionStrings:DefaultConnection="Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default"
+
+#dodawanie managed identity (Azure CLI)
+
+export RESOURCE_GROUP="RG-lab02"
+export LOCATION="PolandCentral"
+export CLUSTER_NAME="todo-aks-lab2"
+export SERVICE_ACCOUNT_NAMESPACE="default"
+export SERVICE_ACCOUNT_NAME="workload-identity-sa"
+export SUBSCRIPTION="$(az account show --query id --output tsv)"
+export USER_ASSIGNED_IDENTITY_NAME="todo-managed-identity"
+export FEDERATED_IDENTITY_CREDENTIAL_NAME="todo-fed-identity"
+
+az identity create \
+    --name "${USER_ASSIGNED_IDENTITY_NAME}" \
+    --resource-group "${RESOURCE_GROUP}" \
+    --location "${LOCATION}" \
+    --subscription "${SUBSCRIPTION}"
