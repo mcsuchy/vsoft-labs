@@ -11,7 +11,9 @@ spec:
     metadata:
       labels:
         name: todo-app
+        azure.workload.identity/use: "true"
     spec:
+      serviceAccountName: todo-app
       containers:
       - name: todo-counter
         image: tododockerregistry.azurecr.io/todo-image:v1
@@ -21,4 +23,11 @@ spec:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Development"
         - name: ConnectionStrings__DefaultConnection
-          value: "Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication="Active Directory Default";"
+          value: "Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: todo-app
+  annotations:
+    azure.workload.identity/client-id: "2c57becb-1733-464a-879f-350d67f9652a"
