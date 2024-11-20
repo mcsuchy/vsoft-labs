@@ -17,6 +17,11 @@ builder.Services.AddOpenApiDocument(config =>
 
 var app = builder.Build();
 
+await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+var databaseFacade = scope.ServiceProvider.GetRequiredService<TodoDb>().Database;
+
+await databaseFacade.MigrateAsync();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
@@ -50,7 +55,8 @@ static async Task<IResult> GetAllTodos(TodoDb db)
 }
 // </snippet_getalltodos>
 
-static async Task<IResult> GetCompleteTodos(TodoDb db) {
+static async Task<IResult> GetCompleteTodos(TodoDb db)
+{
     return TypedResults.Ok(await db.Todos.Where(t => t.IsComplete).Select(x => new TodoItemDTO(x)).ToListAsync());
 }
 
