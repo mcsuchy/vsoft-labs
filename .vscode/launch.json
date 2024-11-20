@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "C#: TodoApi",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/src/ToDo/TodoApi.csproj",
+            "launchConfigurationId": "TargetFramework=;TodoApi",
+            
+    ]
+}
