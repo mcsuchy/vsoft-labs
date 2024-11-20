@@ -9,8 +9,15 @@
 
 - uruchomić image z odpowiednimi zmiennymi: docker run -e ASPNETCORE_ENVIRONMENT=Development -e  "ConnectionStrings__DefaultConnection=Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Persist Security Info=False;User ID=labadmin;Password=Vision123$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" -p 5000:8080 todo-image
 
+- uruchomić image z odpowiednimi zmiennymi: docker run -e ASPNETCORE_ENVIRONMENT=Development -e  "ConnectionStrings__DefaultConnection=Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;" -p 5000:8080 todo-image
+
+
+
 #Azure container registry
 
 az acr login -n tododockerregistry.azurecr.io
 docker tag todo-image:latest tododockerregistry.azurecr.io/todo-image:v1
 docker push tododockerregistry.azurecr.io/todo-image:v1
+
+#Uruchomienie lokalne z bazą AAD Default
+dotnet run --environment Development --ConnectionStrings:DefaultConnection="Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default"

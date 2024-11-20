@@ -21,4 +21,4 @@ spec:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Development"
         - name: ConnectionStrings__DefaultConnection
-          value: "Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Persist Security Info=False;User ID=labadmin;Password=Vision123$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+          value: "Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication="Active Directory Default";"
