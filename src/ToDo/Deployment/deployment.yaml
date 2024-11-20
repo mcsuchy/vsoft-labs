@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      name: todo-app
+  template:
+    metadata:
+      labels:
+        name: todo-app
+    spec:
+      containers:
+      - name: todo-counter
+        image: tododockerregistry.azurecr.io/todo-image:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: ConnectionStrings__DefaultConnection
+          value: "Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Persist Security Info=False;User ID=labadmin;Password=Vision123$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
