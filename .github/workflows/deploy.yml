@@ -1,6 +1,7 @@
 name: build_deploy_todo_aks
 on:
   workflow_dispatch:
+  push:
     
 jobs:
   build:
