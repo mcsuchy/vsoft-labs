@@ -9,6 +9,10 @@ using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Kubernetes;
 
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Messaging.ServiceBus;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Kolejność ma znaczenie - zmienne środowiskowe powinny być ostatnie aby nadpisać 
@@ -23,6 +27,13 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseSqlServer(builder.Configurat
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddEndpointsApiExplorer();
+
+var keyVaultUri = new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/");
+var secretClient = new SecretClient(keyVaultUri, new DefaultAzureCredential());
+var serviceBusConnection = secretClient.GetSecret("ServiceBusConnection").Value.Value;
+
+builder.Services.AddSingleton(new ServiceBusClient(serviceBusConnection));
+
 builder.Services.AddOpenApiDocument(config =>
 {
     config.DocumentName = "TodoAPI";
@@ -87,15 +98,21 @@ static async Task<IResult> GetCompleteTodos(TodoDb db)
     return TypedResults.Ok(await db.Todos.Where(t => t.IsComplete).Select(x => new TodoItemDTO(x)).ToListAsync());
 }
 
-static async Task<IResult> GetTodo(int id, TodoDb db)
+static async Task<IResult> GetTodo(int id, TodoDb db, ServiceBusService serviceBus)
 {
+    var dto = new TodoItemDTO()
+    {
+        Id = id
+    };
+    await serviceBus.SendMessageAsync(new TodoEvent("GetTodo", dto));
+
     return await db.Todos.FindAsync(id)
         is Todo todo
             ? TypedResults.Ok(new TodoItemDTO(todo))
             : TypedResults.NotFound();
 }
 
-static async Task<IResult> CreateTodo(TodoItemDTO todoItemDTO, TodoDb db)
+static async Task<IResult> CreateTodo(TodoItemDTO todoItemDTO, TodoDb db, ServiceBusService serviceBus)
 {
     var todoItem = new Todo
     {
@@ -108,10 +125,13 @@ static async Task<IResult> CreateTodo(TodoItemDTO todoItemDTO, TodoDb db)
 
     todoItemDTO = new TodoItemDTO(todoItem);
 
+    var dto = new TodoItemDTO(todoItem);
+    await serviceBus.SendMessageAsync(new TodoEvent("TodoCreated", dto));
+
     return TypedResults.Created($"/todoitems/{todoItem.Id}", todoItemDTO);
 }
 
-static async Task<IResult> UpdateTodo(int id, TodoItemDTO todoItemDTO, TodoDb db)
+static async Task<IResult> UpdateTodo(int id, TodoItemDTO todoItemDTO, TodoDb db, ServiceBusService serviceBus)
 {
     var todo = await db.Todos.FindAsync(id);
 
@@ -122,15 +142,23 @@ static async Task<IResult> UpdateTodo(int id, TodoItemDTO todoItemDTO, TodoDb db
 
     await db.SaveChangesAsync();
 
+    await serviceBus.SendMessageAsync(new TodoEvent("UpdateTodo", todoItemDTO));
+
     return TypedResults.NoContent();
 }
 
-static async Task<IResult> DeleteTodo(int id, TodoDb db)
+static async Task<IResult> DeleteTodo(int id, TodoDb db, ServiceBusService serviceBus)
 {
     if (await db.Todos.FindAsync(id) is Todo todo)
     {
         db.Todos.Remove(todo);
         await db.SaveChangesAsync();
+
+        var dto = new TodoItemDTO();
+        dto.Id = id;
+
+        await serviceBus.SendMessageAsync(new TodoEvent("DeleteTodo", dto));
+
         return TypedResults.NoContent();
     }
 
