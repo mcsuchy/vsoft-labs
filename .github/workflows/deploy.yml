@@ -19,7 +19,7 @@ jobs:
           repository: todo-app
           image:  todo-image
           folder: src/ToDo
-          branch: master
+          branch: main
           tag: ${{ github.sha }}
       - name: Azure login
         id: login
