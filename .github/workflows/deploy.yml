@@ -28,10 +28,12 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Set AKS context
         id: set-context
-        uses: azure/aks-set-context@v3
+        uses: azure/aks-set-context@v4
         with:
           resource-group: 'RG-lab02' 
           cluster-name: 'todo-aks-lab2'
+          admin: 'false'
+          use-kubelogin: 'true'
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/setup-kubectl@v4
