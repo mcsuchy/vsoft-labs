@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: todo-app-deploy
 spec:
-  replicas: 1
   selector: 
     matchLabels:
       name: todo-app
@@ -17,6 +16,13 @@ spec:
       containers:
       - name: todo-counter
         image: tododockerregistry.azurecr.io/todo-app/todo-image:${TAG}
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
         ports:
         - containerPort: 8080
         env:
@@ -35,3 +41,20 @@ metadata:
   name: todo-app
   annotations:
     azure.workload.identity/client-id: "2c57becb-1733-464a-879f-350d67f9652a"
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: todo-api-scaler
+spec:
+  scaleTargetRef:
+    name: todo-app
+  minReplicaCount: 1  # API zawsze musi mieć minimum jedną instancję
+  maxReplicaCount: 10
+  pollingInterval: 15
+  cooldownPeriod: 60
+  triggers:
+  - type: cpu
+    metadata:
+      type: Utilization
+      value: "60"  # Skaluj gdy średnie użycie CPU przekracza 60%
