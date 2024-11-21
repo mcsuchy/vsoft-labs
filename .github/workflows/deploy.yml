@@ -29,6 +29,8 @@ jobs:
       - name: Use Kubelogin
         id: use-kubelogin
         uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.1.4'
       - name: Set AKS context
         id: set-context
         uses: azure/aks-set-context@v4
