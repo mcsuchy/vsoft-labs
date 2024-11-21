@@ -38,3 +38,7 @@ az identity create \
     --resource-group "${RESOURCE_GROUP}" \
     --location "${LOCATION}" \
     --subscription "${SUBSCRIPTION}"
+
+#Aktywowanie  Application Routing dla klastra AKS
+
+az aks approuting enable --resource-group RG-lab02 --name todo-aks-lab2
