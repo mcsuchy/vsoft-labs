@@ -42,3 +42,7 @@ az identity create \
 #Aktywowanie  Application Routing dla klastra AKS
 
 az aks approuting enable --resource-group RG-lab02 --name todo-aks-lab2
+
+#Application Insights connection string
+InstrumentationKey=53a1b502-8dfd-4183-b1a3-28602e0a8c73;IngestionEndpoint=https://polandcentral-0.in.applicationinsights.azure.com/;LiveEndpoint=https://polandcentral.livediagnostics.monitor.azure.com/;ApplicationId=a3619664-f7d8-4206-8cb4-21f445efed3c
+

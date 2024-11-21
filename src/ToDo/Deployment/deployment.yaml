@@ -24,6 +24,8 @@ spec:
           value: "Development"
         - name: ConnectionStrings__DefaultConnection
           value: "Server=tcp:lab-sql-02.database.windows.net,1433;Initial Catalog=lab-02-sql;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;"
+        - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+          value: "InstrumentationKey=53a1b502-8dfd-4183-b1a3-28602e0a8c73;IngestionEndpoint=https://polandcentral-0.in.applicationinsights.azure.com/;LiveEndpoint=https://polandcentral.livediagnostics.monitor.azure.com/;ApplicationId=a3619664-f7d8-4206-8cb4-21f445efed3c"
 ---
 apiVersion: v1
 kind: ServiceAccount

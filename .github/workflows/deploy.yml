@@ -1,7 +1,7 @@
 name: build_deploy_todo_aks
 on:
   workflow_dispatch:
-  push:
+  # push:
     
 jobs:
   build:
@@ -52,5 +52,6 @@ jobs:
              src/ToDo/Deployment/deployment.yaml
              src/ToDo/Deployment/service.yaml
              src/ToDo/Deployment/ingress.yaml
+             src/ToDo/Deployment/rbac.yaml
           images: '${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/todo-app/todo-image:${{ github.sha }}'
           pull-images: false 
