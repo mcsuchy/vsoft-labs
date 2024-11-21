@@ -1,43 +1,27 @@
-*.swp
-*.*~
-project.lock.json
-.DS_Store
-*.pyc
-nupkg/
+# Ignorowanie folderów i plików związanych z kompilacją w .NET
+bin/
+obj/
 
-# Visual Studio Code
+# Ignorowanie plików konfiguracyjnych wygenerowanych przez .NET
+.vs/
 .vscode/
-
-# Rider
 .idea/
 
-# Visual Studio
-.vs/
+# Ignorowanie plików i folderów specyficznych dla systemów operacyjnych
+Thumbs.db
+.DS_Store
 
-# Fleet
-.fleet/
+# Ignorowanie plików środowiskowych
+appsettings.json
+appsettings.*.json
 
-# Code Rush
-.cr/
+# Ignorowanie plików zawierających dane binarne
+*.dll
+*.exe
+*.pdb
+*.cache
+*.json
 
-# User-specific files
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
-bld/
-[Bb]in/
-[Oo]bj/
-[Oo]ut/
-msbuild.log
-msbuild.err
-msbuild.wrn
+# Ignorowanie folderów związanych z lokalnymi ustawieniami .NET
+**/bin/
+**/obj/
