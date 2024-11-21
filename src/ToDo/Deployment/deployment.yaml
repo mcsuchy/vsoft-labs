@@ -15,7 +15,7 @@ spec:
       serviceAccountName: todo-app
       containers:
       - name: todo-counter
-        image: tododockerregistry.azurecr.io/todo-app/todo-image:${TAG}
+        image: tododockerregistry.azurecr.io/todo-app/todo-image:19eb3028bf11f858ea753b8aeb43b1bbb1248578
         resources:
           requests:
             cpu: "100m"
@@ -48,7 +48,7 @@ metadata:
   name: todo-api-scaler
 spec:
   scaleTargetRef:
-    name: todo-app
+    name:  todo-app-deploy
   minReplicaCount: 1  # API zawsze musi mieć minimum jedną instancję
   maxReplicaCount: 10
   pollingInterval: 15
