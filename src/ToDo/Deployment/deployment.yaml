@@ -16,7 +16,7 @@ spec:
       serviceAccountName: todo-app
       containers:
       - name: todo-counter
-        image: tododockerregistry.azurecr.io/todo-image:v1
+        image: tododockerregistry.azurecr.io/todo-image:${TAG}
         ports:
         - containerPort: 8080
         env:
