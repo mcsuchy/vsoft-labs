@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-events-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-events-processor
+  template:
+    metadata:
+      labels:
+        app: todo-events-processor
+    spec:
+      serviceAccountName: todo-app  # Używamy istniejącego Service Account
+      containers:
+      - name: todo-events-processor
+        image: tododockerregistry.azurecr.io/todo-events-processor:latest
+        env:
+        - name: KeyVaultName
+          value: "kv-todo-app"
+        - name: StorageAccountName
+          value: "todoappstaccteam2"

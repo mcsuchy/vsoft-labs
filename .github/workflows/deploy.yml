@@ -22,11 +22,25 @@ jobs:
           folder: src/ToDo
           branch: main
           tag: ${{ github.sha }}
+      - name: ACR worker build
+        id: build-push-worker-acr
+        uses: azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.AZURE_CLIENT_ID }}
+          service_principal_password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant: ${{ secrets.AZURE_TENANT_ID }}
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          repository: todo-app
+          image:  todo-events-processor
+          folder: src/TodoEventsProcessor
+          branch: main
+          tag: ${{ github.sha }}
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
       - name: Use Kubelogin
         id: use-kubelogin
         uses: azure/use-kubelogin@v1
@@ -53,5 +67,8 @@ jobs:
              src/ToDo/Deployment/service.yaml
              src/ToDo/Deployment/ingress.yaml
              src/ToDo/Deployment/rbac.yaml
-          images: '${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/todo-app/todo-image:${{ github.sha }}'
+             src/TodoEventsProcessor/Deployment/deployment.yaml
+          images: |
+            '${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/todo-app/todo-image:${{ github.sha }}'
+            '${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/todo-app/todo-events-processor:${{ github.sha }}'
           pull-images: false 
